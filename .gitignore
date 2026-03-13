@@ -1,0 +1,54 @@
+# vivado generated build and cache directories
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.gen/
+*.hbs/
+*.str/
+# simulation outputs
+*.wdb
+*.pb
+*.jou
+*.log
+xsim.dir/
+*.ini
+*.prj
+*.tcl
+*.bat
+# synthesis and implementation outputs
+*.dcp
+*.bit
+*.ltx
+*.rpt
+*.xml
+*.html
+*.json
+*.mmi
+*.vdi
+# compiled object and debug files
+*.obj
+*.exe
+*.elf
+*.mem
+*.dbg
+*.reloc
+*.rlx
+*.rtti
+*.sdb
+*.svtype
+*.type
+*.version
+*.xdbg
+vivado*.str
+vivado*.log
+vivado*.jou
+.Xil/
+# os and ide stuff
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
