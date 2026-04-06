@@ -21,27 +21,26 @@
 
 
 module data_memory(
-    input [16:0] address,
-    input [16:0] writedata,
+    input clk,
+    input [15:0] address,
+    input [15:0] writedata,
     input memwrite,
     input memread,
-    output reg [16:0] readdata
+    output reg [15:0] readdata
     );
     
     reg [7:0] memory [0:255];
-always@(address,writedata,memwrite,memread,readdata) 
-begin
-    if(memwrite) begin
-        memory[address]     <= writedata[15:8]; 
+    always @(posedge clk) begin
+    if (memwrite) begin
+        memory[address] <= writedata[15:8];
         memory[address + 1] <= writedata[7:0];
     end
-    
-    if (memread) begin
+end 
+    always @(*) begin
+    if (memread)
         readdata = {memory[address], memory[address + 1]};
-    end else begin
+    else
         readdata = 16'b0;
-    end
-    
 end
 
 endmodule

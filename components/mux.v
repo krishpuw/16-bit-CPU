@@ -29,10 +29,10 @@ module Multiplexer(
 always@(a,b,select) 
 begin
     if(select == 1)begin
-        out = a;
+        out = b;
     end
     else begin
-        out = b;
+        out = a;
     end
 end 
 endmodule

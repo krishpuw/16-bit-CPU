@@ -29,7 +29,7 @@ module instruction_memory (
 
     initial begin
         // program.mem is just a placeholder located at project_1.sim/sim_1/behav/xsim/
-        $readmemh("program.mem", mem); 
+        $readmemh("program.mem", mem);
     end
 
     // instructions stored as big-endian, heres an example

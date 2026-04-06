@@ -33,7 +33,7 @@ module ALU(
     //3 - and
     //else result == 0
 
-always@(a,b,alu_control) 
+always@(*) 
 begin
     if (alu_control == 0) begin
         result = a + b;
@@ -42,7 +42,7 @@ begin
         result = a - b;
    end
    else if(alu_control == 2) begin
-        result = a << b;
+        result = a << b[3:0];
    end
    else if(alu_control == 3) begin
         result = a & b;

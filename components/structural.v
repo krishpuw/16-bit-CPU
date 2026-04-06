@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module structural(input clk);
+module structural(input clk, input reset);
 
     wire [15:0] program_count;
     wire [15:0] instruction;
@@ -36,14 +36,18 @@ module structural(input clk);
     wire [15:0] read_data;
     wire [15:0] pc_p2;
     wire [15:0] branch_a;
-    
-    wire reg_write, mem_read, mem_write,reg_dest, zero,reset,regtomem;
-    wire alu_src, mem_to_reg, aluop,branch,jump;
+    wire [2:0] funct;
+    wire reg_write, mem_read, mem_write,reg_dest, zero,regtomem;
+    wire alu_src, mem_to_reg,branch,jump,bne;
     wire [2:0] alu_control;
-    wire [2:0] write_reg;
+    wire [3:0] write_reg;
+    wire [1:0] aluop;
+    wire [15:0] pc_2;
     
-    assign pc_p2 = program_count +2;
-    assign branch_a = pc_p2  + (sign_extend+2);
+    assign pc_p2 = program_count;
+    assign branch_a = pc_p2  + (sign_extend << 1);
+    assign write_reg = instruction[11:8];
+    
     pc PC(
         .clk(clk),
         .outputpc(program_count),
@@ -65,12 +69,14 @@ module structural(input clk);
         .regwrite(reg_write),
         .memread(mem_read),
         .branch(branch),
-        .aluop(alu_op),
-        .jump(jump)
+        .aluop(aluop),
+        .jump(jump),
+        .func(instruction[2:0])
     );
     
     register_file RF(
         .clk(clk),
+        .reset(reset),
         .read_reg1(instruction[7:4]),
         .read_data1(read_data1),
         .read_reg2(instruction[11:8]),
@@ -95,32 +101,32 @@ module structural(input clk);
     
     // data mem mux
     Multiplexer MX2(
-        .a(mem_data),
-        .b(alu_result),
+        .a(alu_result),
+        .b(mem_data),
         .select(mem_to_reg),
         .out(write_data)
     );
     
     // register file mux
-    Multiplexer MX3(
-        .a(instruction[8:6]),
-        .b(instruction[5:3]),
-        .select(reg_dest),
-        .out(write_reg)
-    );
+    //Multiplexer MX3(
+    //    .a(instruction[8:6]),
+    //    .b(instruction[5:3]),
+    //    .select(reg_dest),
+    //    .out(write_reg)
+    //);
     
     // branch  mux
     Multiplexer MX4(
         .a(pc_p2),
         .b(branch_a),
-        .select(branch & zero),
+        .select((branch & zero) | (bne & ~zero)),
         .out(mux5_input)
     );
     
     // jump  mux
     Multiplexer MX5(
         .a(mux5_input),
-        .b(instruction[11:0] << 1),
+        .b(pc_p2 + {{3{instruction[11]}}, instruction[11:0], 1'b0}),
         .select(jump),
         .out(program_counter_input)
     );
@@ -134,6 +140,7 @@ module structural(input clk);
     );
     
     data_memory DM(
+        .clk(clk),
         .address(alu_result),
         .writedata(read_data2),
         .memwrite(mem_write),
@@ -141,5 +148,9 @@ module structural(input clk);
         .readdata(mem_data)
     );
     
-    
+    alu_control ALUCTL (
+    .aluop(aluop),
+    .funct(instruction[2:0]),
+    .alu_control(alu_control)
+);
 endmodule
