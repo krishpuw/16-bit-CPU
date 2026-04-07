@@ -24,11 +24,11 @@ module register_file (
     input  wire        reset,
 
     // read 1 - rs field [7:4]
-    input  wire [3:0]  read_reg1,    // register the index to read
+    input  wire [7:4]  read_reg1,    // register the index to read
     output wire [15:0] read_data1,   // data read from rs
 
     // read 2  - rt or rd field [11:8]
-    input  wire [3:0]  read_reg2,    // same as above
+    input  wire [11:8]  read_reg2,    // same as above
     output wire [15:0] read_data2,   // same as above
 
     // write

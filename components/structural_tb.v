@@ -19,7 +19,7 @@ module structural_tb;
         reset = 1;
         #10;
         reset = 0;
-        #200; 
+        #1000; 
         $finish;
     end
 

@@ -27,7 +27,7 @@ always @(*) begin
     branch = 1'b0; 
     aluop = 2'b00;
     jump = 1'b0;
-    
+    bne = 1'b0;
     case (opcode)
         
         // R type

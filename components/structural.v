@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module structural(input clk, input reset);
+module structural(input clk, input reset,output [15:0] LED);
 
     wire [15:0] program_count;
     wire [15:0] instruction;
@@ -43,6 +43,28 @@ module structural(input clk, input reset);
     wire [3:0] write_reg;
     wire [1:0] aluop;
     wire [15:0] pc_2;
+    
+    reg [25:0] clock_divisor;
+    always @(posedge clk or posedge reset) begin
+        if (reset)begin
+         clock_divisor <= 0;
+        end
+        else begin
+            clock_divisor <= clock_divisor + 1;
+        end
+    end
+
+    wire slow = clock_divisor[25];
+    reg [15:0] led_lit;
+    always @(posedge slow or posedge reset) begin
+        if (reset)begin
+            led_lit <= 0;
+        end
+        else begin
+            led_lit <= alu_result;
+        end
+    end
+    assign LED = led_lit;
     
     assign pc_p2 = program_count;
     assign branch_a = pc_p2  + (sign_extend << 1);
