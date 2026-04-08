@@ -72,6 +72,7 @@ module regfile_tb;
         read_reg1  = 4'd3;
         read_reg2  = 4'd3;
         #1;
+        $finish;
         end
 
 endmodule
